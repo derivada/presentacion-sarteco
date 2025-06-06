@@ -1,0 +1,160 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme[theline=0.92]{CITIUS}
+
+%% Imports
+\usepackage[utf8]{inputenc}
+\usepackage{lipsum}
+
+%% Definitions
+\title{CITIUS Beamer Theme}
+\subtitle{A modern approach}
+\author{Pablo Díaz Viñambres}
+\date{Junio 2025}
+\def\toctitle{Índice}
+
+
+%% Uncomment for outline before each section
+%\AtBeginSection[] {
+%    \begin{frame}[plain]{\toctitle}
+%        \tableofcontents[currentsection]
+%    \end{frame}
+%}
+
+\begin{document}
+
+%% Title page
+\begin{frame}[plain]%
+    \titlepage%
+\end{frame}
+  
+%% Outline page
+\begin{frame}[plain]{\toctitle}
+    \tableofcontents
+\end{frame}
+\setcounter{framenumber}{0} %% To count only pages with content
+
+\section{Elements}
+
+\begin{frame}{Lists}
+    \begin{itemize}
+        \item Item 
+        \item Item
+        \begin{itemize}
+            \item Subitem
+            \begin{itemize}
+                \item Subsubitem
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{enumerate}
+        \item Enumeration 
+        \item Enumeration
+        \begin{enumerate}
+            \item Subenumeration
+            \begin{enumerate}
+                \item Subsubenumeration
+            \end{enumerate}
+        \end{enumerate}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Blocks}
+    \begin{block}{Normal block}
+        Content
+    \end{block}
+    \begin{exampleblock}{Example block}
+        Such as $\alpha < 0.2$
+    \end{exampleblock}
+    \begin{alertblock}{Alert block}
+        Hola
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Pictures}
+\begin{figure}
+\includegraphics[scale=0.5]{img/logo_CiTIUS}
+\caption{CITIUS Logo}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Tables}
+\begin{table}
+\begin{tabular}{l | c | c | c | c }
+Competitor Name & Swim & Cycle & Run & Total \\
+\hline \hline
+John T & 13:04 & 24:15 & 18:34 & 55:53 \\ 
+Norman P & 8:00 & 22:45 & 23:02 & 53:47\\
+Alex K & 14:00 & 28:00 & n/a & n/a\\
+Sarah H & 9:22 & 21:10 & 24:03 & 54:35 
+\end{tabular}
+\caption{Triathlon results}
+\end{table}
+\end{frame}
+
+\begin{frame}{Hyperlinks and Buttons}
+\hyperlink{contents}{contents page}
+Here are some other button commands we can use.
+
+\hyperlink{columns}{\beamergotobutton{columns page}}
+
+\hyperlink{pictures}{\beamerskipbutton{pictures page}}
+
+\hyperlink{pictures}{\beamerreturnbutton{pictures page}}
+\end{frame}
+
+
+\section{Layout}
+\begin{frame}[t]{Top text}
+    \lipsum[66]
+\end{frame}
+
+\begin{frame}{Using Columns}
+    \begin{columns}
+    \column{0.5\textwidth}
+        \lipsum[66]
+    \column{0.5\textwidth}
+        \lipsum[66]
+    \end{columns}
+\end{frame}
+
+\section{Bibliography}
+\begin{frame}{References}
+\begin{thebibliography}{9}% 2nd arg is the width of the widest label.
+\bibitem{key01}
+Beeblebrox, Zaphod, \textit{Galactic University Press}
+\end{thebibliography}
+\end{frame}
+
+\setbeamertemplate{background}{
+    \begin{tikzpicture}
+        \node[opacity=.8,inner sep=0pt]{
+            \includegraphics[height=\paperheight,width=\paperwidth]{img/background.pdf}};
+    \end{tikzpicture}
+}
+\begin{frame}[plain,noframenumbering]
+    \begin{center}
+    \begin{minipage}{.75\textwidth}%
+        \begin{beamercolorbox}[sep=1em, rounded=false, center]{header citius}%
+            \Huge Questions?\vspace*{-1ex}%
+        \end{beamercolorbox}%
+    \end{minipage}
+    \\[5pt]
+    \hyperlink{mailto:ismael.rodriguez@usc.es}{ismael.rodriguez@usc.es}
+
+    \bigskip
+
+    \begin{tikzpicture}
+        \node[inner sep=10pt]{
+            \includegraphics[height=0.15\paperheight]{img/logos_FEDER_2014-2020.pdf}};
+    \end{tikzpicture}\\
+    Fondo Europeo de Desenvolvemento Rexional\\*
+    ``Unha maneira de facer Europa``
+  \end{center}
+
+\end{frame}
+
+
+
+\end{document}
