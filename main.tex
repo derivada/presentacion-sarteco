@@ -25,6 +25,7 @@
 %% Title page
 \begin{frame}[plain]%
     \titlepage%
+    
 \end{frame}
   
 %% Outline page
@@ -37,23 +38,66 @@
 
 \begin{frame}{Búsquedas de vecinos}
 
+Dada una nube de puntos tridimensional $P$, un centro $c$ y un radio $r$, buscamos encontrar todos los puntos $q \in P$ con $\left\lVert q-c \right\rVert < r$.
+
+Esta operación extrae la estructura local de la nube, y tiene infinitos usos en el procesado de nubes de puntos: clusterización, segmentación, extracción de propiedades, \dots
+% METER DIAGRAMA BÚSQUEDA DE VECINOS / KERNEL
+\vspace{2em}
+
+\textbf{Problema:} extraer los vecinos de un gran número de puntos puede ser costoso, y de hecho puede convertirse en el paso más lento dentro del procesado de la nube.
 \end{frame}
 
 \begin{frame}{Nubes LiDAR}
-
+    \begin{columns}
+        \column{0.5\textwidth}
+            \begin{itemize}
+                \item Gran tamaño, altamente irregulares en densidad y geometría
+                \item Varios tipos (sensor aéreo vs terrestre)
+                \item Necesidad de métodos optimizados para el cálculo de vecinos
+            \end{itemize}        
+        \column{0.5\textwidth}
+            % METER IMAGEN NUBE AÉREA Y TERRESTRE
+        \end{columns}
 \end{frame}
 
-\section{Curvas de llenado del espacio (SFC)}
+\section{Curvas de llenado del espacio (SFCs)}
 \begin{frame}{Curvas de llenado del espacio}
-    
+    \begin{itemize}
+        \item Normalmente, los datos de las nubes se almacenan como un vector de puntos, con el orden de escaneo del sensor LiDAR $\rightarrow$ \textbf{Mala localidad espacial} 
+        \item Puntos muy cercanos en el espacio tridimensional se pueden encontrar muy alejados en memoria
+        \item ¿Cómo mejorar la localidad? $\rightarrow$ Reordenando la nube mediante una curva de llenado del espacio \textit{(Space Filling Curve)}
+    \end{itemize}
+% Poner figura con Nube sin reordenar -> curva -> nube reordenada (abajo del texto para variar)
 \end{frame}
 
-\begin{frame}{Curvas de Morton y Hilbert}
-    
+\begin{frame}{SFCs de Morton y Hilbert}
+    \begin{columns}
+        \column{0.5\textwidth}
+            \textbf{SFC de Morton}
+            % IMAGEN CURVA      
+            \begin{itemize}
+                \item Presenta saltos, menor localidad
+                \item Cálculo en unas pocas instrucciones (LUTs, vectorización)
+            \end{itemize}
+        \column{0.5\textwidth}
+            \textbf{SFC de Hilbert}
+            % IMAGEN CURVA   
+
+            \begin{itemize}
+                \item Continua, mejor localidad teórica
+                \item Cálculo iterativo más lento
+            \end{itemize}
+        \end{columns}
 \end{frame}
 
-\begin{frame}{Cálculo y reordenamiento}
-    
+\begin{frame}{Reordenando la nube}
+    \begin{enumerate}
+        \item Discretización: hallar la \textit{bounding box} y trasladar todos los puntos al espacio $S_L = [0,2^L) \times [0, 2^L) \times [0, 2^L) \subset \mathbb{Z}^3$.
+        \item Para cada punto $p =(x,y,z) \in S_L$, hallar su código $c$ de Morton o de Hilbert de $3L$ bits, marcando su orden en la curva de profundidad $L$.
+        \item Una vez se han hallado todos los códigos, utilizarlos como índice para reordenar la nube.
+    \end{enumerate}
+
+    % PONER DIAGRAMA 2D O ALGO ASÍ
 \end{frame}
 
 \section{Octrees}
@@ -78,7 +122,7 @@
     
 \end{frame}
 
-\begin{frame}{Eficiencia en el paralelismo}
+\begin{frame}{Conclusiones}
     
 \end{frame}
 
