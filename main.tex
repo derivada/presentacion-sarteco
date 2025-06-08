@@ -6,19 +6,19 @@
 \usepackage{lipsum}
 
 %% Definitions
-\title{CITIUS Beamer Theme}
-\subtitle{A modern approach}
-\author{Pablo Díaz Viñambres}
+\title{Aplicación de curvas de llenado del espacio en nubes \\ de puntos 3D almacenadas en Octrees}
+%\subtitle{A modern approach}
+\author{Pablo Díaz, Miguel Yermo, José C. Cabaleiro, Francisco F. Rivera}
 \date{Junio 2025}
 \def\toctitle{Índice}
 
 
 %% Uncomment for outline before each section
-%\AtBeginSection[] {
+% \AtBeginSection[] {
 %    \begin{frame}[plain]{\toctitle}
 %        \tableofcontents[currentsection]
 %    \end{frame}
-%}
+% }
 
 \begin{document}
 
@@ -33,31 +33,59 @@
 \end{frame}
 \setcounter{framenumber}{0} %% To count only pages with content
 
-\section{Elements}
+\section{Búsquedas de vecinos}
 
-\begin{frame}{Lists}
-    \begin{itemize}
-        \item Item 
-        \item Item
-        \begin{itemize}
-            \item Subitem
-            \begin{itemize}
-                \item Subsubitem
-            \end{itemize}
-        \end{itemize}
-    \end{itemize}
-    
-    \begin{enumerate}
-        \item Enumeration 
-        \item Enumeration
-        \begin{enumerate}
-            \item Subenumeration
-            \begin{enumerate}
-                \item Subsubenumeration
-            \end{enumerate}
-        \end{enumerate}
-    \end{enumerate}
+\begin{frame}{Búsquedas de vecinos}
+
 \end{frame}
+
+\begin{frame}{Nubes LiDAR}
+
+\end{frame}
+
+\section{Curvas de llenado del espacio (SFC)}
+\begin{frame}{Curvas de llenado del espacio}
+    
+\end{frame}
+
+\begin{frame}{Curvas de Morton y Hilbert}
+    
+\end{frame}
+
+\begin{frame}{Cálculo y reordenamiento}
+    
+\end{frame}
+
+\section{Octrees}
+\begin{frame}{Octrees}
+    
+\end{frame}
+
+\begin{frame}{Relación con las SFCs}
+    
+\end{frame}
+
+\begin{frame}{Búsquedas de vecinos optimizadas con \textit{cornerstone-octree}}
+    
+\end{frame}
+
+\section{Resultados}
+\begin{frame}{Setup experimental}
+    
+\end{frame}
+
+\begin{frame}{Búsquedas aleatorias y completas}
+    
+\end{frame}
+
+\begin{frame}{Eficiencia en el paralelismo}
+    
+\end{frame}
+
+\begin{frame}{Últimos avances}
+    
+\end{frame}
+
 
 \begin{frame}{Blocks}
     \begin{block}{Normal block}
@@ -104,8 +132,6 @@ Here are some other button commands we can use.
 \hyperlink{pictures}{\beamerreturnbutton{pictures page}}
 \end{frame}
 
-
-\section{Layout}
 \begin{frame}[t]{Top text}
     \lipsum[66]
 \end{frame}
@@ -119,13 +145,13 @@ Here are some other button commands we can use.
     \end{columns}
 \end{frame}
 
-\section{Bibliography}
-\begin{frame}{References}
-\begin{thebibliography}{9}% 2nd arg is the width of the widest label.
-\bibitem{key01}
-Beeblebrox, Zaphod, \textit{Galactic University Press}
-\end{thebibliography}
-\end{frame}
+% \section{Bibliography}
+% \begin{frame}{References}
+% \begin{thebibliography}{9}% 2nd arg is the width of the widest label.
+% \bibitem{key01}
+% Beeblebrox, Zaphod, \textit{Galactic University Press}
+% \end{thebibliography}
+% \end{frame}
 
 \setbeamertemplate{background}{
     \begin{tikzpicture}
@@ -137,20 +163,20 @@ Beeblebrox, Zaphod, \textit{Galactic University Press}
     \begin{center}
     \begin{minipage}{.75\textwidth}%
         \begin{beamercolorbox}[sep=1em, rounded=false, center]{header citius}%
-            \Huge Questions?\vspace*{-1ex}%
+            \Huge Preguntas?\vspace*{-1ex}%
         \end{beamercolorbox}%
     \end{minipage}
     \\[5pt]
-    \hyperlink{mailto:ismael.rodriguez@usc.es}{ismael.rodriguez@usc.es}
+    % \hyperlink{mailto:ismael.rodriguez@usc.es}{ismael.rodriguez@usc.es}
 
-    \bigskip
+    % \bigskip
 
-    \begin{tikzpicture}
-        \node[inner sep=10pt]{
-            \includegraphics[height=0.15\paperheight]{img/logos_FEDER_2014-2020.pdf}};
-    \end{tikzpicture}\\
-    Fondo Europeo de Desenvolvemento Rexional\\*
-    ``Unha maneira de facer Europa``
+    % \begin{tikzpicture}
+    %     \node[inner sep=10pt]{
+    %         \includegraphics[height=0.15\paperheight]{img/logos_FEDER_2014-2020.pdf}};
+    % \end{tikzpicture}\\
+    % Fondo Europeo de Desenvolvemento Rexional\\*
+    % ``Unha maneira de facer Europa``
   \end{center}
 
 \end{frame}
