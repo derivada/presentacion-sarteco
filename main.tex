@@ -4,6 +4,9 @@
 %% Imports
 \usepackage[utf8]{inputenc}
 \usepackage{lipsum}
+\usepackage{multirow}
+\usepackage[backend=bibtex,style=numeric]{biblatex} % or style=authoryear, etc.
+\addbibresource{references.bib}  % Make sure the file name matches your .bib file
 
 %% Definitions
 \title{Aplicación de curvas de llenado del espacio en nubes \\ de puntos 3D almacenadas en Octrees}
@@ -12,6 +15,21 @@
 \date{Junio 2025}
 \def\toctitle{Índice}
 
+
+% COLORES OCTREES
+
+% Define custom colors (RGB or HEX-like via HTML)
+\definecolor{octUnencoded}{HTML}{E1A692}
+\definecolor{octMort}{HTML}{DE6E56}
+\definecolor{octHilb}{HTML}{C23728}
+\definecolor{loctMort}{HTML}{63BFF0}
+\definecolor{loctHilb}{HTML}{1984C5}
+% Macros for colored bullets with spacing
+\newcommand{\dotUnencoded}{\textcolor{octUnencoded}{\textbullet}~}
+\newcommand{\dotOctMort}{\textcolor{octMort}{\textbullet}~}
+\newcommand{\dotOctHilb}{\textcolor{octHilb}{\textbullet}~}
+\newcommand{\dotLoctMort}{\textcolor{loctMort}{\textbullet}~}
+\newcommand{\dotLoctHilb}{\textcolor{loctHilb}{\textbullet}~}
 
 %% Uncomment for outline before each section
 % \AtBeginSection[] {
@@ -65,7 +83,7 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
     \begin{itemize}
         \item Normalmente, los datos de las nubes se almacenan como un vector de puntos, con el orden de escaneo del sensor LiDAR $\rightarrow$ \textbf{Mala localidad espacial} 
         \item Puntos muy cercanos en el espacio tridimensional se pueden encontrar muy alejados en memoria
-        \item ¿Cómo mejorar la localidad? $\rightarrow$ Reordenando la nube mediante una curva de llenado del espacio \textit{(Space Filling Curve)}
+        \item ¿Cómo mejorar la localidad? $\rightarrow$ Reordenando la nube mediante una curva de llenado del espacio \textit{(Space Filling Curve)} \cite{asano1997space}
     \end{itemize}
 % Poner figura con Nube sin reordenar -> curva -> nube reordenada (abajo del texto para variar)
 \end{frame}
@@ -73,14 +91,14 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
 \begin{frame}{SFCs de Morton y Hilbert}
     \begin{columns}
         \column{0.5\textwidth}
-            \textbf{SFC de Morton}
+            \textbf{SFC de Morton} \cite{morton1966computer}
             % IMAGEN CURVA      
             \begin{itemize}
                 \item Presenta saltos, menor localidad
                 \item Cálculo en unas pocas instrucciones (LUTs, vectorización)
             \end{itemize}
         \column{0.5\textwidth}
-            \textbf{SFC de Hilbert}
+            \textbf{SFC de Hilbert} \cite{lam1994class,miki2017gothic}
             % IMAGEN CURVA   
 
             \begin{itemize}
@@ -102,101 +120,181 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
 
 \section{Octrees}
 \begin{frame}{Octrees}
+    \begin{columns}
+        \column{0.5\textwidth}    
+        \begin{enumerate}
+            \item Estructura jerárquica de volúmenes (\textit{BVH}) donde el espacio se subdivide recursivamente en $8$ octantes.
+            \item Los nodos internos tienen 8 suboctantes, las hojas tienen puntos de la nube. 
+            \item Se subdivide hasta que las hojas no tienen más de $N_{max}$ puntos.
+        \end{enumerate}
+        \vspace{0.8em}
+
+        \begin{block}{\textbf{¿Cómo almacenar los nodos?}}
+            \textrightarrow \: Octrees basados en punteros \\
+            \textrightarrow \: Octrees lineales
+        \end{block}
+        \column{0.5\textwidth}
+        
+        % PONER IMAGEN OCTREE Y OCTREE BASADO EN PUNTEROS?
+    \end{columns}
     
 \end{frame}
 
-\begin{frame}{Relación con las SFCs}
-    
+\begin{frame}{Búsqueda de vecinos en Octrees}
+    \begin{columns}
+    \column{0.5\textwidth}
+    % TODO meter algo
+    \column{0.5\textwidth}
+        \begin{exampleblock}{Ventajas}
+            % No creo que haga mucha falta apuntar que es log N
+            \textrightarrow \: Mucho mejor que fuerza bruta $\mathcal{O}(\log{N})$ en vez de $\mathcal{O}(N)$. \\
+            \textrightarrow \: Los puntos de las hojas están próximos en memoria gracias a las SFCs. \\
+        \end{exampleblock}
+        \begin{alertblock}{Desventajas}
+            \textrightarrow \: Se debe recorrer todo el árbol \\
+            \textrightarrow \: Muchas redirecciones de punteros, peor localidad del árbol \\
+        \end{alertblock}
+    \end{columns}
+
 \end{frame}
 
-\begin{frame}{Búsquedas de vecinos optimizadas con \textit{cornerstone-octree}}
-    
-\end{frame}
-
-\section{Resultados}
-\begin{frame}{Setup experimental}
-    
-\end{frame}
-
-\begin{frame}{Búsquedas aleatorias y completas}
-    
-\end{frame}
-
-\begin{frame}{Conclusiones}
-    
-\end{frame}
-
-\begin{frame}{Últimos avances}
-    
-\end{frame}
-
-
-\begin{frame}{Blocks}
-    \begin{block}{Normal block}
-        Content
-    \end{block}
-    \begin{exampleblock}{Example block}
-        Such as $\alpha < 0.2$
-    \end{exampleblock}
-    \begin{alertblock}{Alert block}
-        Hola
-    \end{alertblock}
+\begin{frame}{Optimización con Octrees lineales}
+        Nuestro Octree lineal es una variante de la estructura \textit{cornerstone-octree} dada por Keller et al. \cite{Keller2023}, originalmente usada en simulaciones de partículas.
+        \vspace{1em}
+        \begin{block}{Ideas principales}
+            \textrightarrow \: Cada hoja o nodo interno se puede representar mediante el rango de índices de la nube reordenada, gracias al reordenamiento por SFCs. \\
+            \textrightarrow \: La información para enlazar el árbol y realizar las búsquedas también se puede comprimir en un array indicando el primer hijo de cada octante.
+        \end{block}    
 \end{frame}
 
 \begin{frame}
-\frametitle{Pictures}
-\begin{figure}
-\includegraphics[scale=0.5]{img/logo_CiTIUS}
-\caption{CITIUS Logo}
-\end{figure}
-\end{frame}
-
-\begin{frame}{Tables}
-\begin{table}
-\begin{tabular}{l | c | c | c | c }
-Competitor Name & Swim & Cycle & Run & Total \\
-\hline \hline
-John T & 13:04 & 24:15 & 18:34 & 55:53 \\ 
-Norman P & 8:00 & 22:45 & 23:02 & 53:47\\
-Alex K & 14:00 & 28:00 & n/a & n/a\\
-Sarah H & 9:22 & 21:10 & 24:03 & 54:35 
-\end{tabular}
-\caption{Triathlon results}
-\end{table}
-\end{frame}
-
-\begin{frame}{Hyperlinks and Buttons}
-\hyperlink{contents}{contents page}
-Here are some other button commands we can use.
-
-\hyperlink{columns}{\beamergotobutton{columns page}}
-
-\hyperlink{pictures}{\beamerskipbutton{pictures page}}
-
-\hyperlink{pictures}{\beamerreturnbutton{pictures page}}
-\end{frame}
-
-\begin{frame}[t]{Top text}
-    \lipsum[66]
-\end{frame}
-
-\begin{frame}{Using Columns}
     \begin{columns}
-    \column{0.5\textwidth}
-        \lipsum[66]
-    \column{0.5\textwidth}
-        \lipsum[66]
+        \column{0.5\textwidth}    
+        El Octree lineal cuenta con las siguientes características:
+        \begin{enumerate}
+            \item Construcción rápida y altamente paralelizable
+            \item \textbf{Rangos de índices en la rama disponible en todos los nodos, y consecutivos gracias a las SFCs}
+            \item Estructura compacta y contenida en unos pocos arrays, muy buena localidad del árbol
+        \end{enumerate}
+        \column{0.5\textwidth}
+        \textit{Algoritmo optimizado de búsquedas}
+        % TODO meter algo
+    \end{columns}
+
+\end{frame}
+\section{Resultados}
+\begin{frame}{Setup experimental}
+    Conjunto de nubes variado: \textit{Paris-Lille}, \textit{DALES}, \textit{Semantic3D} y \textit{Speulderbos}. % TODO meter características más básicas nubes (tamaño y terrestre vs aérea)
+
+    \textrightarrow \: 2 experimentos principales:
+    \begin{enumerate}
+        \item \textbf{Búsquedas aleatorias:} $5000$ búsquedas en un subconjunto de centros aleatorio $v_c \subset P$, con varios radios, \textit{kernels} (esfera, círculo, cubo, cuadrado) y combinaciones SFC+Octree. 
+        \item \textbf{Búsquedas completas:} lo mismo pero con $v_c = P$, y realizando las búsquedas con el orden de la nube tras el reordenamiento, para más localidad.
+    \end{enumerate}
+    \textrightarrow \: Paralelización a nivel de bucle con OpenMP, 40 hilos sobre arquitectura NUMA.
+
+    \begin{table}
+    
+        \begin{tabular}{@{}lll@{}}
+            \textbf{Octree} & \textbf{Reordenamiento} & \textbf{Nombre} \\
+            \hline
+            Punteros        & Ninguno       & \dotUnencoded \texttt{poct\_unsorted} \\
+                            & Morton        & \dotOctMort \texttt{poct\_mort} \\
+                            & Hilbert       & \dotOctHilb \texttt{poct\_hilb} \\
+            \hline
+            Lineal          & Morton        & \dotLoctMort \texttt{loct\_mort} \\
+                            & Hilbert       & \dotLoctHilb \texttt{loct\_hilb} \\
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Resultados}
+    \begin{columns}
+        \column{0.5\textwidth}
+        
+        \textit{Búsquedas aleatorias - radio (m) vs tiempo acumulado (s)  para las 5000 búsquedas en Paris\_Luxembourg\_6}
+        \column{0.5\textwidth}
+        \textit{Búsquedas aleatorias - Tiempo vs tamaño promedio de los vecindarios en varias nubes y configuraciones (escala log-log)}
     \end{columns}
 \end{frame}
 
-% \section{Bibliography}
-% \begin{frame}{References}
-% \begin{thebibliography}{9}% 2nd arg is the width of the widest label.
-% \bibitem{key01}
-% Beeblebrox, Zaphod, \textit{Galactic University Press}
-% \end{thebibliography}
+\begin{frame}{Resultados}
+    \begin{columns}
+    \column{0.2\textwidth}
+    \textit{Búsquedas completas - Varias nubes, kernel esférico}
+    \column{0.8\textwidth}
+    \vspace{-0.5em} 
+        \begin{table}
+            \scriptsize
+            \begin{tabular}{|c|c|c|ccc|}
+            \hline
+            Nube                      & $n$                    & $r$ (m)                  & Octree                    & SFC     & Tiempo (s)\\ \hline
+            \multirow{5}{*}{\textit{Lille\_0}} & \multirow{5}{*}{10.00M} & \multirow{5}{*}{3.0} & \multirow{3}{*}{Punteros} & - & 445.24 \\
+            &  &  &  & Morton & 332.11 \\
+            &  &  &  & Hilbert & 324.87 \\ \cline{4-6}
+            &  &  & \multirow{2}{*}{Lineal} & Morton & 130.96 \\
+            &  &  &  & Hilbert & \textbf{130.20} \\
+            \hline
+            \multirow{5}{*}{\textit{5080\_54400}} & \multirow{5}{*}{12.22M} & \multirow{5}{*}{10.0} & \multirow{3}{*}{Punteros} & - & 98.04 \\
+            &  &  &  & Morton & 64.99 \\
+            &  &  &  & Hilbert & 62.80 \\ \cline{4-6}
+            &  &  & \multirow{2}{*}{Lineal} & Morton & \textbf{42.66} \\
+            &  &  &  & Hilbert & 46.31 \\
+            \hline
+            \multirow{5}{*}{\textit{bildstein\_station1}} & \multirow{5}{*}{29.70M} & \multirow{5}{*}{0.1} & \multirow{3}{*}{Punteros} & - & 118.44 \\
+            &  &  &  & Morton & 106.35 \\
+            &  &  &  & Hilbert & 103.08 \\ \cline{4-6}
+            &  &  & \multirow{2}{*}{Lineal} & Morton & \textbf{60.66} \\
+            &  &  &  & Hilbert & 65.11 \\
+            \hline
+            \multirow{5}{*}{\textit{sg27\_station8}} & \multirow{5}{*}{429.62M} & \multirow{5}{*}{0.05} & \multirow{3}{*}{Punteros} & - & 2549.36 \\
+            &  &  &  & Morton & 2243.24 \\
+            &  &  &  & Hilbert & 2208.13 \\ \cline{4-6}
+            &  &  & \multirow{2}{*}{Lineal} & Morton & \textbf{1273.68} \\
+            &  &  &  & Hilbert & 1427.66 \\
+            \hline
+            \end{tabular}
+        \end{table}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Conclusiones}
+    \begin{itemize}
+        \item TODO
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Últimos avances}
+    \begin{itemize}
+        \item Método de búsqueda en Octree lineal devolviendo rangos de índices en vez de lista de punteros / índices \textrightarrow \: Gran mejora para $r$ grande.
+        \item Mejorada la comprobación geométrica para kernels esféricos, a partir del trabajo de Behley et al. \cite{behley2015efficient}
+        \item Con todo esto, búsquedas mucho más rápidas ($\approx 10x$) que los Octrees y KD-Trees de PCL y $2-3x$ veces más rápidas que el Octree desarrollado por Behley et al. \cite{behley2015efficient}
+    \end{itemize}
+\end{frame}
+
+\section{Bibliografía}
+\begin{frame}[allowframebreaks]{Referencias}
+    \printbibliography
+\end{frame}
+
+% \begin{frame}
+% \frametitle{Pictures}
+% \begin{figure}
+% \includegraphics[scale=0.5]{img/logo_CiTIUS}
+% \caption{CITIUS Logo}
+% \end{figure}
 % \end{frame}
 
+% \begin{frame}{Hyperlinks and Buttons}
+% \hyperlink{contents}{contents page}
+% Here are some other button commands we can use.
+
+% \hyperlink{columns}{\beamergotobutton{columns page}}
+
+% \hyperlink{pictures}{\beamerskipbutton{pictures page}}
+
+% \hyperlink{pictures}{\beamerreturnbutton{pictures page}}
+% \end{frame}
 \setbeamertemplate{background}{
     \begin{tikzpicture}
         \node[opacity=.8,inner sep=0pt]{
