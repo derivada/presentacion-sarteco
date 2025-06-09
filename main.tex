@@ -97,14 +97,20 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
                 \item Presenta saltos, menor localidad
                 \item Cálculo en unas pocas instrucciones (LUTs, vectorización)
             \end{itemize}
+            \begin{figure}
+                \includegraphics[scale=0.27]{img/morton_quadtree.pdf}
+            \end{figure}
         \column{0.5\textwidth}
             \textbf{SFC de Hilbert} \cite{lam1994class,miki2017gothic}
             % IMAGEN CURVA   
 
             \begin{itemize}
-                \item Continua, mejor localidad teórica
+                \item Continua, mejor localidad teórica (continuidad en ${\left\lVert \cdot \right\rVert}_\infty$)
                 \item Cálculo iterativo más lento
-            \end{itemize}
+            \end{itemize}            
+            \begin{figure}
+                \includegraphics[scale=0.27]{img/hilbert_quadtree.pdf}
+            \end{figure}
         \end{columns}
 \end{frame}
 
@@ -134,7 +140,8 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
             \textrightarrow \: Octrees lineales
         \end{block}
         \column{0.5\textwidth}
-        
+        \includegraphics[scale=0.5]{img/plot_Lille_0_hilbert_oct.pdf}
+        {\scriptsize \centering Construcción de un Octree sobre la nube Lille\_0, reordenada mediante la curva de Hilbert \par}
         % PONER IMAGEN OCTREE Y OCTREE BASADO EN PUNTEROS?
     \end{columns}
     
@@ -209,13 +216,12 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
 \end{frame}
 
 \begin{frame}{Resultados}
-    \begin{columns}
+    \vspace{-1em} % Optional: Pull up if needed
+    \begin{columns}[t] % Align top for better fitting
         \column{0.5\textwidth}
-        
-        \textit{Búsquedas aleatorias - radio (m) vs tiempo acumulado (s)  para las 5000 búsquedas en Paris\_Luxembourg\_6}
         \column{0.5\textwidth}
-        \textit{Búsquedas aleatorias - Tiempo vs tamaño promedio de los vecindarios en varias nubes y configuraciones (escala log-log)}
-    \end{columns}
+            \includegraphics[width=0.8\linewidth]{img/loglog_subsets.pdf}
+            {\scriptsize \centering Búsquedas aleatorias - Tiempo vs tamaño promedio de los vecindarios en varias nubes (log-log) \par}    \end{columns}
 \end{frame}
 
 \begin{frame}{Resultados}
