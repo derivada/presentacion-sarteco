@@ -74,7 +74,8 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
                 \item Necesidad de métodos optimizados para el cálculo de vecinos
             \end{itemize}        
         \column{0.5\textwidth}
-            % METER IMAGEN NUBE AÉREA Y TERRESTRE
+            \includegraphics[scale=0.65]{img/vecindario_lille.png}
+            {\scriptsize \centering Vecindario esférico en la nube \textit{Lille\_0} \par}
         \end{columns}
 \end{frame}
 
@@ -120,8 +121,26 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
         \item Para cada punto $p =(x,y,z) \in S_L$, hallar su código $c$ de Morton o de Hilbert de $3L$ bits, marcando su orden en la curva de profundidad $L$.
         \item Una vez se han hallado todos los códigos, utilizarlos como índice para reordenar la nube.
     \end{enumerate}
-
-    % PONER DIAGRAMA 2D O ALGO ASÍ
+    \vspace{1em}
+    \begin{center}
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{img/plot_5080-54400_unencoded.pdf} \\
+            \footnotesize Nube original (tile de DALES)
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{img/plot_5080-54400_morton.pdf} \\
+            \footnotesize Reordenada (Morton)
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{img/plot_5080-54400_hilbert.pdf} \\
+            \footnotesize Reordenada (Hilbert)
+        \end{minipage}
+    \end{center}
 \end{frame}
 
 \section{Octrees}
@@ -151,7 +170,16 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
     \begin{columns}
     \column{0.5\textwidth}
     % TODO meter algo
-    \column{0.5\textwidth}
+    \begin{enumerate}
+        \item Si el nodo es una rama, calculamos su posición relativa respecto al \textit{kernel}:
+          \begin{enumerate}
+               \item[1a.] Octante interseca al \textit{kernel} \textrightarrow\: Seguir descendiendo.
+               \item[1b.] Octante fuera del \textit{kernel} \textrightarrow\:  Parar
+          \end{enumerate}
+        \item Si llegamos a una hoja, comprobamos punto a punto si pertenecen o no al \textit{kernel} propuesto. 
+        \item Finalmente, devolvemos todos los puntos en el interior del \textit{kernel}.
+    \end{enumerate}
+        \column{0.5\textwidth}
         \begin{exampleblock}{Ventajas}
             % No creo que haga mucha falta apuntar que es log N
             \textrightarrow \: Mucho mejor que fuerza bruta $\mathcal{O}(\log{N})$ en vez de $\mathcal{O}(N)$. \\
@@ -186,6 +214,16 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
         \column{0.5\textwidth}
         \textit{Algoritmo optimizado de búsquedas}
         % TODO meter algo
+        \begin{enumerate}
+            \item Si el nodo es una rama, calculamos su posición relativa respecto al \textit{kernel}:
+              \begin{enumerate}
+                    \item[1a.] \textbf{Octante contenido en \textit{kernel} \textrightarrow\: Insertar puntos secuencialmente, usando la estructura lineal con acceso directo a los puntos.}
+                   \item[1b.] Octante interseca al \textit{kernel} \textrightarrow\: Seguir descendiendo.
+                   \item[1c.] Octante fuera del \textit{kernel} \textrightarrow\:  Parar
+              \end{enumerate}
+            \item Si llegamos a una hoja, comprobamos punto a punto si pertenecen o no al \textit{kernel} propuesto. 
+            \item Finalmente, devolvemos todos los puntos en el interior del \textit{kernel}.
+        \end{enumerate}
     \end{columns}
 
 \end{frame}
@@ -219,6 +257,9 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
     \vspace{-1em} % Optional: Pull up if needed
     \begin{columns}[t] % Align top for better fitting
         \column{0.5\textwidth}
+        \includegraphics[width=0.8\linewidth]{img/paris_luxembourg_6_subsets_reduced.pdf}
+        {\scriptsize \centering Búsquedas aleatorias - Tiempos en \textit{Paris\_Luxembourg\_6}, para $r=1.0$ y $r=3.0$ y varios kernels \par}
+
         \column{0.5\textwidth}
             \includegraphics[width=0.8\linewidth]{img/loglog_subsets.pdf}
             {\scriptsize \centering Búsquedas aleatorias - Tiempo vs tamaño promedio de los vecindarios en varias nubes (log-log) \par}    \end{columns}
@@ -266,7 +307,9 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
 
 \begin{frame}{Conclusiones}
     \begin{itemize}
-        \item TODO
+        \item El reordenamiento por curvas de Morton y Hilbert mejora la localidad de la nube, lo cuál reduce el tiempo de las búsquedas.
+        \item La implementación empleada para el Octree lineal aporta una mejora muy considerable frene a la estructurada basada en punteros.
+        \item La reordenación mediante SFCs y el Octree lineal tienden a mejorar el coeficiente de paralelización de las búsquedas.
     \end{itemize}
 \end{frame}
 
