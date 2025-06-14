@@ -170,15 +170,17 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
     \begin{columns}
     \column{0.5\textwidth}
     % TODO meter algo
-    \begin{enumerate}
-        \item Si el nodo es una rama, calculamos su posición relativa respecto al \textit{kernel}:
-          \begin{enumerate}
-               \item[1a.] Octante interseca al \textit{kernel} \textrightarrow\: Seguir descendiendo.
-               \item[1b.] Octante fuera del \textit{kernel} \textrightarrow\:  Parar
-          \end{enumerate}
-        \item Si llegamos a una hoja, comprobamos punto a punto si pertenecen o no al \textit{kernel} propuesto. 
-        \item Finalmente, devolvemos todos los puntos en el interior del \textit{kernel}.
-    \end{enumerate}
+    \textit{Algoritmo de búsqueda en profundidad}
+    \vspace{1em}
+        \begin{enumerate}
+            \item Si el nodo es una rama, calculamos su posición relativa respecto al \textit{kernel}:
+            \begin{enumerate}
+                \item[1a.] Octante interseca al \textit{kernel} \textrightarrow\: Seguir descendiendo.
+                \item[1b.] Octante fuera del \textit{kernel} \textrightarrow\:  Parar
+            \end{enumerate}
+            \item Si llegamos a una hoja, comprobamos punto a punto si pertenecen o no al \textit{kernel} propuesto. 
+            \item Finalmente, devolvemos todos los puntos en el interior del \textit{kernel}.
+        \end{enumerate}
         \column{0.5\textwidth}
         \begin{exampleblock}{Ventajas}
             % No creo que haga mucha falta apuntar que es log N
@@ -190,16 +192,17 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
             \textrightarrow \: Muchas redirecciones de punteros, peor localidad del árbol \\
         \end{alertblock}
     \end{columns}
-
 \end{frame}
 
 \begin{frame}{Optimización con Octrees lineales}
         Nuestro Octree lineal es una variante de la estructura \textit{cornerstone-octree} dada por Keller et al. \cite{Keller2023}, originalmente usada en simulaciones de partículas.
         \vspace{1em}
         \begin{block}{Ideas principales}
-            \textrightarrow \: Cada hoja o nodo interno se puede representar mediante el rango de índices de la nube reordenada, gracias al reordenamiento por SFCs. \\
+            \textrightarrow \: Cada hoja o nodo interno se puede representar mediante el \textbf{rango de índices} de la nube reordenada, gracias al reordenamiento por SFCs. \\
             \textrightarrow \: La información para enlazar el árbol y realizar las búsquedas también se puede comprimir en un array indicando el primer hijo de cada octante.
-        \end{block}    
+        \end{block} 
+
+        \textbullet\: Por ejemplo, bajo el $i$-ésimo hijo del nodo raíz ($0 \leq i \leq 7$) tenemos los puntos con SFC en $[i\cdot 8^{L-1}, (i+1) \cdot 8^{L-1})$, con índices en el rango $[a_i, a_{i+1})$, siendo $a_0 = 0$ y $a_8 = N$.
 \end{frame}
 
 \begin{frame}
@@ -209,11 +212,11 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
         \begin{enumerate}
             \item Construcción rápida y altamente paralelizable
             \item \textbf{Rangos de índices en la rama disponible en todos los nodos, y consecutivos gracias a las SFCs}
-            \item Estructura compacta y contenida en unos pocos arrays, muy buena localidad del árbol
+            \item Estructura compacta y contenida en unos pocos arrays: muy buena localidad y poco overhead en memoria.
         \end{enumerate}
         \column{0.5\textwidth}
         \textit{Algoritmo optimizado de búsquedas}
-        % TODO meter algo
+        \vspace{1em}
         \begin{enumerate}
             \item Si el nodo es una rama, calculamos su posición relativa respecto al \textit{kernel}:
               \begin{enumerate}
