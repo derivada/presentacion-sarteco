@@ -5,9 +5,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage{lipsum}
 \usepackage{multirow}
+\usepackage[spanish,es-nodecimaldot]{babel}
 \usepackage[backend=bibtex,style=numeric]{biblatex} % or style=authoryear, etc.
 \addbibresource{references.bib}  % Make sure the file name matches your .bib file
-
+\usepackage{subcaption}
 %% Definitions
 \title{Aplicación de curvas de llenado del espacio en nubes \\ de puntos 3D almacenadas en Octrees}
 %\subtitle{A modern approach}
@@ -58,33 +59,36 @@
 
 Dada una nube de puntos tridimensional $P$, un centro $c$ y un radio $r$, buscamos encontrar todos los puntos $q \in P$ con $\left\lVert q-c \right\rVert < r$.
 
-Esta operación extrae la estructura local de la nube, y tiene infinitos usos en el procesado de nubes de puntos: clusterización, segmentación, extracción de propiedades, \dots
+Esta operación extrae la estructura local de la nube, y tiene innumerables usos en el procesado de nubes de puntos: clusterización, segmentación, extracción de propiedades, etc.
 % METER DIAGRAMA BÚSQUEDA DE VECINOS / KERNEL
 \vspace{2em}
 
-\textbf{Problema:} extraer los vecinos de un gran número de puntos puede ser costoso, y de hecho puede convertirse en el paso más lento dentro del procesado de la nube.
+\textbf{Problema:} extraer los vecinos de un gran número de puntos es costoso, y de hecho suele ser la parte más computacionalmente demandante del procesado de la nube.
 \end{frame}
 
 \begin{frame}{Nubes LiDAR}
     \begin{columns}
         \column{0.5\textwidth}
             \begin{itemize}
-                \item Gran tamaño, altamente irregulares en densidad y geometría
+                \item Gran tamaño, altamente irregulares tanto en densidad como en geometría
                 \item Varios tipos (sensor aéreo vs terrestre)
-                \item Necesidad de métodos optimizados para el cálculo de vecinos
+                \item Necesidad de algoritmos y estructuras de datos optimizados para el cálculo de vecinos
             \end{itemize}        
         \column{0.5\textwidth}
+        \begin{figure}
+            \centering
             \includegraphics[scale=0.65]{img/vecindario_lille.png}
-            {\scriptsize \centering Vecindario esférico en la nube \textit{Lille\_0} \par}
-        \end{columns}
+            \caption{Vecindario esférico en la nube \textit{Lille\_0}}
+        \end{figure}
+    \end{columns}
 \end{frame}
 
 \section{Curvas de llenado del espacio (SFCs)}
 \begin{frame}{Curvas de llenado del espacio}
     \begin{itemize}
-        \item Normalmente, los datos de las nubes se almacenan como un vector de puntos, con el orden de escaneo del sensor LiDAR $\rightarrow$ \textbf{Mala localidad espacial} 
-        \item Puntos muy cercanos en el espacio tridimensional se pueden encontrar muy alejados en memoria
-        \item ¿Cómo mejorar la localidad? $\rightarrow$ Reordenando la nube mediante una curva de llenado del espacio \textit{(Space Filling Curve)} \cite{asano1997space}
+        \item Normalmente, los datos de las nubes se almacenan como un vector de puntos, en el mismo orden de escaneo del sensor LiDAR $\rightarrow$ \textbf{Mala localidad espacial} 
+        \item Puntos muy cercanos en el espacio tridimensional pueden encontrarse muy alejados en memoria
+        \item ¿Cómo mejorar la localidad? $\rightarrow$ Reordenando la nube mediante una curva de llenado del espacio \textit{(\textbf{S}pace \textbf{F}illing \textbf{C}urve)} \cite{asano1997space}
     \end{itemize}
 % Poner figura con Nube sin reordenar -> curva -> nube reordenada (abajo del texto para variar)
 \end{frame}
@@ -121,27 +125,35 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
         \item Para cada punto $p =(x,y,z) \in S_L$, hallar su código $c$ de Morton o de Hilbert de $3L$ bits, marcando su orden en la curva de profundidad $L$.
         \item Una vez se han hallado todos los códigos, utilizarlos como índice para reordenar la nube.
     \end{enumerate}
-    \vspace{1em}
-    \begin{center}
-        \begin{minipage}{0.32\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{img/plot_5080-54400_unencoded.pdf} \\
-            \footnotesize Nube original (tile de DALES)
-        \end{minipage}
-        \hfill
-        \begin{minipage}{0.32\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{img/plot_5080-54400_morton.pdf} \\
-            \footnotesize Reordenada (Morton)
-        \end{minipage}
-        \hfill
-        \begin{minipage}{0.32\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{img/plot_5080-54400_hilbert.pdf} \\
-            \footnotesize Reordenada (Hilbert)
-        \end{minipage}
-    \end{center}
+
 \end{frame}
+
+\begin{frame}{Reordenando la nube}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.55\textwidth]{img/plot_5080-54400_unencoded.pdf}
+        \caption{Nube original, con color según orden de índices.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Reordenando la nube}
+    \begin{figure}
+        \centering
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{img/plot_5080-54400_morton.pdf}
+            \caption{Reordenada (Morton)}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{img/plot_5080-54400_hilbert.pdf}
+            \caption{Reordenada (Hilbert)}
+        \end{subfigure}
+        \caption{Nube reordenada con dos técnicas distintas.}
+    \end{figure}
+\end{frame}
+
 
 \section{Octrees}
 \begin{frame}{Octrees}
@@ -159,8 +171,10 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
             \textrightarrow \: Octrees lineales
         \end{block}
         \column{0.5\textwidth}
-        \includegraphics[scale=0.5]{img/plot_Lille_0_hilbert_oct.pdf}
-        {\scriptsize \centering Construcción de un Octree sobre la nube Lille\_0, reordenada mediante la curva de Hilbert \par}
+        \begin{figure}[t]
+            \includegraphics[scale=0.55]{img/plot_Lille_0_hilbert_oct.pdf}
+            \caption{Construcción de un Octree sobre la nube Lille\_0, reordenada mediante la curva de Hilbert}
+        \end{figure}
         % PONER IMAGEN OCTREE Y OCTREE BASADO EN PUNTEROS?
     \end{columns}
     
@@ -176,7 +190,7 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
             \item Si el nodo es una rama, calculamos su posición relativa respecto al \textit{kernel}:
             \begin{enumerate}
                 \item[1a.] Octante interseca al \textit{kernel} \textrightarrow\: Seguir descendiendo.
-                \item[1b.] Octante fuera del \textit{kernel} \textrightarrow\:  Parar
+                \item[1b.] Octante fuera del \textit{kernel} \textrightarrow\:  Parar.
             \end{enumerate}
             \item Si llegamos a una hoja, comprobamos punto a punto si pertenecen o no al \textit{kernel} propuesto. 
             \item Finalmente, devolvemos todos los puntos en el interior del \textit{kernel}.
@@ -184,7 +198,7 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
         \column{0.5\textwidth}
         \begin{exampleblock}{Ventajas}
             % No creo que haga mucha falta apuntar que es log N
-            \textrightarrow \: Mucho mejor que fuerza bruta $\mathcal{O}(\log{N})$ en vez de $\mathcal{O}(N)$. \\
+            \textrightarrow \: Mucho mejor que fuerza bruta: $\mathcal{O}(\log{N})$ en vez de $\mathcal{O}(N)$. \\
             \textrightarrow \: Los puntos de las hojas están próximos en memoria gracias a las SFCs. \\
         \end{exampleblock}
         \begin{alertblock}{Desventajas}
@@ -195,7 +209,7 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
 \end{frame}
 
 \begin{frame}{Optimización con Octrees lineales}
-        Nuestro Octree lineal es una variante de la estructura \textit{cornerstone-octree} dada por Keller et al. \cite{Keller2023}, originalmente usada en simulaciones de partículas.
+        El Octree lineal propuesto es una variante de la estructura \textit{cornerstone-octree} dada por Keller et al. \cite{Keller2023}, originalmente usada en simulaciones de partículas.
         \vspace{1em}
         \begin{block}{Ideas principales}
             \textrightarrow \: Cada hoja o nodo interno se puede representar mediante el \textbf{rango de índices} de la nube reordenada, gracias al reordenamiento por SFCs. \\
@@ -210,8 +224,8 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
         \column{0.5\textwidth}    
         El Octree lineal cuenta con las siguientes características:
         \begin{enumerate}
-            \item Construcción rápida y altamente paralelizable
-            \item \textbf{Rangos de índices en la rama disponible en todos los nodos, y consecutivos gracias a las SFCs}
+            \item Construcción rápida y altamente paralelizable.
+            \item \textbf{Rangos de índices en la rama disponible en todos los nodos, y consecutivos gracias a las SFCs.}
             \item Estructura compacta y contenida en unos pocos arrays: muy buena localidad y poco overhead en memoria.
         \end{enumerate}
         \column{0.5\textwidth}
@@ -222,7 +236,7 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
               \begin{enumerate}
                     \item[1a.] \textbf{Octante contenido en \textit{kernel} \textrightarrow\: Insertar puntos secuencialmente, usando la estructura lineal con acceso directo a los puntos.}
                    \item[1b.] Octante interseca al \textit{kernel} \textrightarrow\: Seguir descendiendo.
-                   \item[1c.] Octante fuera del \textit{kernel} \textrightarrow\:  Parar
+                   \item[1c.] Octante fuera del \textit{kernel} \textrightarrow\:  Parar.
               \end{enumerate}
             \item Si llegamos a una hoja, comprobamos punto a punto si pertenecen o no al \textit{kernel} propuesto. 
             \item Finalmente, devolvemos todos los puntos en el interior del \textit{kernel}.
@@ -231,7 +245,7 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
 
 \end{frame}
 \section{Resultados}
-\begin{frame}{Setup experimental}
+\begin{frame}{Configuración experimental}
     Conjunto de nubes variado: \textit{Paris-Lille}, \textit{DALES}, \textit{Semantic3D} y \textit{Speulderbos}. % TODO meter características más básicas nubes (tamaño y terrestre vs aérea)
 
     \textrightarrow \: 2 experimentos principales:
@@ -261,7 +275,7 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
     \begin{columns}[t] % Align top for better fitting
         \column{0.5\textwidth}
         \includegraphics[width=0.8\linewidth]{img/paris_luxembourg_6_subsets_reduced.pdf}
-        {\scriptsize \centering Búsquedas aleatorias - Tiempos en \textit{Paris\_Luxembourg\_6}, para $r=1.0$ y $r=3.0$ y varios kernels \par}
+        {\scriptsize \centering Búsquedas aleatorias - Tiempos en \textit{Paris\_Luxembourg\_6}, para $r=1.0m$ y $r=3.0m$ y varios kernels \par}
 
         \column{0.5\textwidth}
             \includegraphics[width=0.8\linewidth]{img/loglog_subsets.pdf}
@@ -316,18 +330,25 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Últimos avances}
+\begin{frame}{Últimos avances y trabajo futuro}
+    \textrightarrow~Últimos avances:
     \begin{itemize}
         \item Método de búsqueda en Octree lineal devolviendo rangos de índices en vez de lista de punteros / índices \textrightarrow \: Gran mejora para $r$ grande.
         \item Mejorada la comprobación geométrica para kernels esféricos, a partir del trabajo de Behley et al. \cite{behley2015efficient}
         \item Con todo esto, búsquedas mucho más rápidas ($\approx 10x$) que los Octrees y KD-Trees de PCL y $2-3x$ veces más rápidas que el Octree desarrollado por Behley et al. \cite{behley2015efficient}
     \end{itemize}
+
+    \textrightarrow~Trabajo futuro:
+
+    \begin{itemize}
+        \item Probar búsquedas $k$-NN.
+        \item Comparar con más librerías.
+        \item Profiling de memoria.
+        \item \dots
+    \end{itemize}
 \end{frame}
 
-\section{Bibliografía}
-\begin{frame}[allowframebreaks]{Referencias}
-    \printbibliography
-\end{frame}
+
 
 % \begin{frame}
 % \frametitle{Pictures}
@@ -361,7 +382,7 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
         \end{beamercolorbox}%
     \end{minipage}
     \\[5pt]
-    % \hyperlink{mailto:ismael.rodriguez@usc.es}{ismael.rodriguez@usc.es}
+    % \hyperlink{mailto:pablo.diaz.vinambres@rai.usc.es}{pablo.diaz.vinambres@rai.usc.es}
 
     % \bigskip
 
@@ -375,6 +396,9 @@ Esta operación extrae la estructura local de la nube, y tiene infinitos usos en
 
 \end{frame}
 
-
+\section{Bibliografía}
+\begin{frame}[allowframebreaks]{Referencias}
+    \printbibliography
+\end{frame}
 
 \end{document}
