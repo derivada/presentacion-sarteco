@@ -57,7 +57,7 @@
 
 \begin{frame}{Búsquedas de vecinos}
 
-Dada una nube de puntos tridimensional $P$, un centro $c$ y un radio $r$, buscamos encontrar todos los puntos $q \in P$ con $\left\lVert q-c \right\rVert < r$.
+Dada una nube de puntos tridimensional $\mathcal{P}$, un centro $c$ y un radio $r$, buscamos encontrar todos los puntos $q \in \mathcal{P}$ con $\left\lVert q-c \right\rVert < r$.
 
 Esta operación extrae la estructura local de la nube, y tiene innumerables usos en el procesado de nubes de puntos: clusterización, segmentación, extracción de propiedades, etc.
 % METER DIAGRAMA BÚSQUEDA DE VECINOS / KERNEL
@@ -132,7 +132,7 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
     \begin{figure}
         \centering
         \includegraphics[width=0.55\textwidth]{img/plot_5080-54400_unencoded.pdf}
-        \caption{Nube original, con color según orden de índices.}
+        \caption{Nube original del dataset \textit{DALES}, con color según orden de índices.}
     \end{figure}
 \end{frame}
 
@@ -202,7 +202,7 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
             \textrightarrow \: Los puntos de las hojas están próximos en memoria gracias a las SFCs. \\
         \end{exampleblock}
         \begin{alertblock}{Desventajas}
-            \textrightarrow \: Se debe recorrer todo el árbol \\
+            \textrightarrow \: Se debe recorrer el árbol hasta las hojas \\
             \textrightarrow \: Muchas redirecciones de punteros, peor localidad del árbol \\
         \end{alertblock}
     \end{columns}
@@ -216,7 +216,7 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
             \textrightarrow \: La información para enlazar el árbol y realizar las búsquedas también se puede comprimir en un array indicando el primer hijo de cada octante.
         \end{block} 
 
-        \textbullet\: Por ejemplo, bajo el $i$-ésimo hijo del nodo raíz ($0 \leq i \leq 7$) tenemos los puntos con SFC en $[i\cdot 8^{L-1}, (i+1) \cdot 8^{L-1})$, con índices en el rango $[a_i, a_{i+1})$, siendo $a_0 = 0$ y $a_8 = N$.
+        \textbullet\: Por ejemplo, bajo el $i$-ésimo hijo del nodo raíz ($0 \leq i \leq 7$) tenemos los puntos con SFC en $[i\cdot 8^{3L-1}, (i+1) \cdot 8^{3L-1})$, con índices en el rango $[a_i, a_{i+1})$, siendo $a_0 = 0$ y $a_8 = N$.
 \end{frame}
 
 \begin{frame}
@@ -396,7 +396,6 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
 
 \end{frame}
 
-\section*{Bibliografía}
 \begin{frame}[allowframebreaks]{Referencias}
     \printbibliography
 \end{frame}
