@@ -34,7 +34,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % FONTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamerfont{title}{size=\Large,series=\bfseries}
+\setbeamerfont{title}{size=\Huge,series=\bfseries}
 \setbeamerfont{subtitle}{size=\large, series=\bfseries}
 \setbeamerfont{frametitle}{size=\Large, series=\bfseries}
 \setbeamerfont{framesubtitle}{size=\footnotesize}
@@ -58,9 +58,9 @@
 
 %% Generals
 \setbeamercolor{linea gris}{bg=gris citius oscuro}
-\setbeamercolor{section in toc}{fg=laranxa citius}
+\setbeamercolor{section in toc}{fg=black}
 \setbeamercolor{normal text}{fg=gris citius oscuro}
-\setbeamercolor{button}{fg=laranxa citius}
+\setbeamercolor{button}{fg=black}
 
 %% Title page
 \setbeamercolor{title}{fg=gris citius titlepage oscuro}
@@ -69,7 +69,7 @@
 
 %% Frame
 \setbeamercolor{section in head/foot}{fg=white}
-\setbeamercolor{header citius}{fg=white,bg=laranxa citius}
+\setbeamercolor{header citius}{fg=white,bg=black}
 \setbeamercolor{frametitle}{fg=gris citius oscuro,bg=white}
 
 
@@ -103,7 +103,7 @@
 
 %% Buttons
 \setbeamertemplate{button}{{\normalsize\insertbuttontext}}
-\hypersetup{colorlinks,allcolors=laranxa citius}
+\hypersetup{colorlinks,allcolors=black}
 
 %% Bibliography
 \setbeamertemplate{bibliography item}{{\usebeamercolor[bg]{header citius}\insertbiblabel}}
@@ -168,6 +168,7 @@
     \nointerlineskip
     
     %% Title section
+    \vskip11pt
     \begin{beamercolorbox}[ht=.4\paperheight,wd=\paperwidth]{none}
         \leftskip20pt
         {\usebeamerfont{title}\usebeamercolor{title}\inserttitle\par}
@@ -190,14 +191,13 @@
     \end{beamercolorbox}
     \vskip0.1\paperheight
     
-    \vskip11pt
     
     \begin{beamercolorbox}[sep=10pt,ht=.135\paperheight,wd=\paperwidth]{\@thebox}
         \includegraphics[height=20pt]{img/logo_USC.pdf}
         \hskip10pt
         \includegraphics[height=20pt]{img/logo_CampusVida.pdf}
         \hfill
-        \includegraphics[height=20pt]{img/logo_CiTIUS_horizontal.pdf}
+        \includegraphics[height=20pt]{img/logo_citius.pdf}
     \end{beamercolorbox}
 }
 
@@ -208,7 +208,7 @@
     \ifnum\thepage=1%
         \begin{tikzpicture}
             \node[opacity=.8,inner sep=0pt]{
-                \includegraphics[height=\paperheight,width=\paperwidth]{img/background.pdf}};
+                \includegraphics[height=\paperheight,width=\paperwidth]{img/background_new.pdf}};
         \end{tikzpicture}
     \fi
 }

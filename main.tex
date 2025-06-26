@@ -10,7 +10,8 @@
 \addbibresource{references.bib}  % Make sure the file name matches your .bib file
 \usepackage{subcaption}
 %% Definitions
-\title{Aplicación de curvas de llenado del espacio en nubes \\ de puntos 3D almacenadas en Octrees}
+
+\title{Aplicación de curvas de llenado del espacio en nubes de puntos 3D almacenadas en Octrees}
 %\subtitle{A modern approach}
 \author{Pablo Díaz, Miguel Yermo, José C. Cabaleiro, Francisco F. Rivera}
 \date{Junio 2025}
@@ -74,6 +75,9 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
                 \item Varios tipos (sensor aéreo vs terrestre)
                 \item Necesidad de algoritmos y estructuras de datos optimizados para el cálculo de vecinos
             \end{itemize}        
+        
+        \textrightarrow~Conjunto de nubes variado: datasets \textit{Paris-Lille}, \textit{DALES}, \textit{Semantic3D} y \textit{Speulderbos}.
+
         \column{0.5\textwidth}
         \begin{figure}
             \centering
@@ -119,13 +123,36 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
         \end{columns}
 \end{frame}
 
+
 \begin{frame}{Reordenando la nube}
     \begin{enumerate}
         \item Discretización: hallar la \textit{bounding box} y trasladar todos los puntos al espacio $S_L = [0,2^L) \times [0, 2^L) \times [0, 2^L) \subset \mathbb{Z}^3$.
-        \item Para cada punto $p =(x,y,z) \in S_L$, hallar su código $c$ de Morton o de Hilbert de $3L$ bits, marcando su orden en la curva de profundidad $L$.
-        \item Una vez se han hallado todos los códigos, utilizarlos como índice para reordenar la nube.
+        \item Para cada punto $p =(x,y,z) \in S_L$, calcular su código $c$ de Morton o de Hilbert de $3L$ bits, marcando su orden en la curva de profundidad $L$.
+        \item Una vez se han hallado los códigos, \textbf{utilizarlos como índice para reordenar}.
     \end{enumerate}
 
+    \pause
+    \vspace{-0.5em}
+    \begin{figure}[ht]
+      \centering
+      \begin{minipage}{0.3\linewidth}
+        \centering
+        \includegraphics[width=0.85\linewidth]{img/plot_regular-2_hilbert.pdf}
+        \captionof*{figure}{Hilbert $L = 1$}
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.3\linewidth}
+        \centering
+        \includegraphics[width=0.85\linewidth]{img/plot_regular-4_hilbert.pdf}
+        \captionof*{figure}{Hilbert $L = 2$}
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.3\linewidth}
+        \centering
+        \includegraphics[width=0.85\linewidth]{img/plot_regular-8_hilbert.pdf}
+        \captionof*{figure}{Hilbert $L = 3$}
+      \end{minipage}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Reordenando la nube}
@@ -142,15 +169,15 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
         \begin{subfigure}{0.45\textwidth}
             \centering
             \includegraphics[width=\linewidth]{img/plot_5080-54400_morton.pdf}
-            \caption{Reordenada (Morton)}
+            \caption{Morton, $L = 21$}
         \end{subfigure}
         \hfill
         \begin{subfigure}{0.45\textwidth}
             \centering
             \includegraphics[width=\linewidth]{img/plot_5080-54400_hilbert.pdf}
-            \caption{Reordenada (Hilbert)}
+            \caption{Hilbert, $L = 21$}
         \end{subfigure}
-        \caption{Nube reordenada con dos técnicas distintas.}
+        \caption{Nube reordenada con dos curvas distintas.}
     \end{figure}
 \end{frame}
 
@@ -198,7 +225,7 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
         \column{0.5\textwidth}
         \begin{exampleblock}{Ventajas}
             % No creo que haga mucha falta apuntar que es log N
-            \textrightarrow \: Mucho mejor que fuerza bruta: $\mathcal{O}(\log{N})$ en vez de $\mathcal{O}(N)$. \\
+            \textrightarrow \: Mucho mejor que fuerza bruta: no se comprueban todos los puntos. \\
             \textrightarrow \: Los puntos de las hojas están próximos en memoria gracias a las SFCs. \\
         \end{exampleblock}
         \begin{alertblock}{Desventajas}
@@ -246,14 +273,12 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
 \end{frame}
 \section{Resultados}
 \begin{frame}{Configuración experimental}
-    Conjunto de nubes variado: \textit{Paris-Lille}, \textit{DALES}, \textit{Semantic3D} y \textit{Speulderbos}. % TODO meter características más básicas nubes (tamaño y terrestre vs aérea)
 
     \textrightarrow \: 2 experimentos principales:
     \begin{enumerate}
         \item \textbf{Búsquedas aleatorias:} $5000$ búsquedas en un subconjunto de centros aleatorio $v_c \subset P$, con varios radios, \textit{kernels} (esfera, círculo, cubo, cuadrado) y combinaciones SFC+Octree. 
         \item \textbf{Búsquedas completas:} lo mismo pero con $v_c = P$, y realizando las búsquedas con el orden de la nube tras el reordenamiento, para más localidad.
     \end{enumerate}
-    \textrightarrow \: Paralelización a nivel de bucle con OpenMP, 40 hilos sobre arquitectura NUMA.
 
     \begin{table}
     
@@ -269,16 +294,38 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
         \end{tabular}
     \end{table}
 \end{frame}
+\begin{frame}{Configuración experimental}
+    \textrightarrow \: Paralelización a nivel de bucle con OpenMP, 40 hilos sobre arquitectura NUMA.
 
-\begin{frame}{Resultados}
+    \begin{quote}
+        \noindent \textbf{Procesador:} 4× Intel(R) Xeon(R) CPU E5-4620 v4 @ 2.10 GHz  
+
+        \noindent \textbf{Núcleos:} 10 núcleos físicos por procesador (40 en total)  
+
+        \noindent \textbf{Arquitectura:} Broadwell  
+
+        \noindent \textbf{Memoria RAM:} 251 GiB
+
+        \noindent \textbf{Sistema Operativo:} Alma Linux 8.6 (Sky Tiger) Kernel 4.18.0
+
+        \noindent \textbf{Compilador:} GCC 12.1.1 (-O2)
+
+    \noindent \textbf{Opciones de compilación:} -O2
+
+\end{quote}
+
+
+\end{frame}
+
+\begin{frame}
     \vspace{-1em} % Optional: Pull up if needed
     \begin{columns}[t] % Align top for better fitting
         \column{0.5\textwidth}
-        \includegraphics[width=0.8\linewidth]{img/paris_luxembourg_6_subsets_reduced.pdf}
+        \includegraphics[width=\linewidth]{img/paris_luxembourg_6_subsets_reduced.pdf}
         {\scriptsize \centering Búsquedas aleatorias - Tiempos en \textit{Paris\_Luxembourg\_6}, para $r=1.0m$ y $r=3.0m$ y varios kernels \par}
 
         \column{0.5\textwidth}
-            \includegraphics[width=0.8\linewidth]{img/loglog_subsets.pdf}
+            \includegraphics[width=0.95\linewidth]{img/loglog_subsets.pdf}
             {\scriptsize \centering Búsquedas aleatorias - Tiempo vs tamaño promedio de los vecindarios en varias nubes (log-log) \par}    \end{columns}
 \end{frame}
 
@@ -378,11 +425,11 @@ Esta operación extrae la estructura local de la nube, y tiene innumerables usos
     \begin{center}
     \begin{minipage}{.75\textwidth}%
         \begin{beamercolorbox}[sep=1em, rounded=false, center]{header citius}%
-            \Huge Preguntas?\vspace*{-1ex}%
+            \Huge ¡Muchas gracias!\vspace*{-1ex}%
         \end{beamercolorbox}%
     \end{minipage}
     \\[5pt]
-    % \hyperlink{mailto:pablo.diaz.vinambres@rai.usc.es}{pablo.diaz.vinambres@rai.usc.es}
+    \hyperlink{mailto:pablo.diaz.vinambres@rai.usc.es}{pablo.diaz.vinambres@rai.usc.es}
 
     % \bigskip
 
